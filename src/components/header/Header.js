@@ -6,7 +6,8 @@ import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../../firebase/config";
 import { toast } from "react-toastify";
-
+import { useDispatch } from "react-redux";
+import { SET_ACTIVE_USER } from "../../redux/slice/authSlice";
 
 
 const logo = (
@@ -41,6 +42,8 @@ const Header = () => {
 
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+
   const toggleMenu = () => {
     setShowMenu(!showMenu)
   };
@@ -67,9 +70,25 @@ const Header = () => {
       if (user) {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
-        const uid = user.uid;
-        console.log(user.displayName)
-        setdisplayName(user.displayName)
+        // console.log(user)
+        // const uid = user.uid;
+        // console.log(user.displayName)
+        if (user.displayName == null) {
+          const u1 = user.email.slice(0, -10);
+          const uName = u1.charAt(0).toUpperCase() + u1.slice(1);
+          // console.log(uName);
+          setdisplayName(uName);
+          // console.log(u1);
+        } else {
+          setdisplayName(user.displayName);
+        }
+
+
+        dispatch(SET_ACTIVE_USER({
+          email: user.email,
+          userName: user.displayName ? user.displayName : displayName,
+          userID: user.uid,
+        }));
       } else {
         // User is signed out
         setdisplayName("")
