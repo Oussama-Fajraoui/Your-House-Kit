@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Header.module.scss";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { FaShoppingCart, FaTimes } from "react-icons/fa";
+import { FaShoppingCart, FaTimes, FaUserCircle } from "react-icons/fa";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
-import { signOut } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../../firebase/config";
 import { toast } from "react-toastify";
 
@@ -36,7 +36,9 @@ const activeLink = ({ isActive }) =>
  
 const Header = () => {
 
-  const [showMenu, setShowMenu] = useState(false) ;
+  const [showMenu, setShowMenu] = useState(false);
+  const [displayName, setdisplayName] = useState("") ;
+
   const navigate = useNavigate();
 
   const toggleMenu = () => {
@@ -56,7 +58,25 @@ const Header = () => {
       // An error happened.
       toast.error(error.message);
     });
-  }
+  };
+
+//Monitor currently sign in user :
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        const uid = user.uid;
+        console.log(user.displayName)
+        setdisplayName(user.displayName)
+      } else {
+        // User is signed out
+        setdisplayName("")
+
+      }
+    });
+  }, [])
 
   return (
     <header>
@@ -69,36 +89,73 @@ const Header = () => {
 
           <div 
           className={showMenu ? `${styles["nav-wrapper"]} ${styles["show-nav-wrapper"]}`
-          : `${styles["nav-wrapper"]}`} onClick={hideMenu}></div>
+          : `${styles["nav-wrapper"]}`} onClick={hideMenu}>
+
+          </div>
 
           <ul onClick={hideMenu}>
             <li className={styles["logo-mobile"]}>
               {logo}
-              <FaTimes size={22} color="#fff" onClick={hideMenu} /> 
+              <FaTimes 
+                   size={22} 
+                   color="#fff" 
+                   onClick={hideMenu} 
+              /> 
             </li>
+
             <li>
-              <NavLink to="/" className={activeLink}>
+              <NavLink 
+                   to="/" 
+                   className={activeLink}
+              >
                 Home
               </NavLink>
+
             </li>
+
             <li>
-              <NavLink to="/contact" className={activeLink}>
+              <NavLink 
+                   to="/contact" 
+                   className={activeLink}
+              >
                 Contact-us
               </NavLink>
             </li>
           </ul>
-          <div className={styles["header-right"]} onClick={hideMenu}>
+
+          <div 
+               className={styles["header-right"]} 
+               onClick={hideMenu}
+          >
             <span className={styles.links}>
-              <NavLink to="/login" className={activeLink}>
+              <NavLink 
+                   to="/login" 
+                   className={activeLink}
+              >
                 Login
               </NavLink>
-              <NavLink to="/register" className={activeLink}>
+
+              <a href="#">
+              <FaUserCircle 
+                   size={18}
+              /> Hi, {displayName}
+              </a>
+              <NavLink 
+                   to="/register" 
+                   className={activeLink}>
                 Register
               </NavLink>
-              <NavLink to="/order-history" className={activeLink}>
+
+              <NavLink 
+                   to="/order-history" 
+                   className={activeLink}
+              >
                 My Orders
               </NavLink>
-              <NavLink to="/" onClick={logoutUser}>
+              <NavLink 
+                   to="/" 
+                   onClick={logoutUser}
+              >
                 Logout
               </NavLink>
             </span>
@@ -108,7 +165,10 @@ const Header = () => {
 
         <div className={styles["menu-icon"]}>
           {cart}
-          <HiOutlineMenuAlt3 size={28} onClick={toggleMenu} />
+          <HiOutlineMenuAlt3 
+                 size={28} 
+                 onClick={toggleMenu} 
+          />
         </div>
       </div>
     </header>
