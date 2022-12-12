@@ -21,7 +21,7 @@ const Register = () => {
 
   const registerUser = (e) => {
     e.preventDefault();
-    console.log(email, password, cPassword);
+    // console.log(email, password, cPassword);
     if(password !== cPassword) {
         toast.error("Password Do Not Match !")
     }
@@ -58,21 +58,47 @@ const Register = () => {
             <h2>Register</h2>
             
             <form onSubmit={registerUser}>
-                <input type="text" placeholder='Email' required value={email} onChange={(e) => setEmail(e.target.value)} />
-                <input type="password" placeholder='Password' required value={password} onChange={(e) => setPassword(e.target.value)} />
-                <input type="password" placeholder='Confirm Password' required value={cPassword} onChange={(e) => setCPassword(e.target.value)} />
-                <button className='--btn --btn-primary --btn-block' type='submit'>Register</button>
+                <input 
+                     type="text" 
+                     placeholder='Email' 
+                     required value={email} 
+                     onChange={(e) => setEmail(e.target.value)} 
+                />
+                <input 
+                     type="password" 
+                     placeholder='Password' 
+                     required value={password} 
+                     onChange={(e) => setPassword(e.target.value)} 
+                />
+                <input 
+                     type="password" 
+                     placeholder='Confirm Password' 
+                     required value={cPassword} 
+                     onChange={(e) => setCPassword(e.target.value)} 
+                />
+                <button 
+                     className='--btn --btn-primary --btn-block' 
+                     type='submit'>
+                        Register
+                </button>
             </form>
             <span className={styles.register}>
                 <p>Already have an account ?</p>
-                <Link to="/login">Login</Link>
+                <Link 
+                    to="/login">
+                         Login
+                </Link>
             </span>
         </div>
         </Card>
 
 
         <div className={styles.img}>
-            <img src={registerImg} alt='Register' width="400" />
+            <img 
+                src={registerImg} 
+                alt='Register' 
+                width="400" 
+            />
         </div>
     </section>
     </>
