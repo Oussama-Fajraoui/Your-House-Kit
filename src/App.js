@@ -4,7 +4,7 @@ import { Home, Contact, Login, Register, Reset } from "./pages/index";
 //Components:
 import { Footer, Header } from "./components/index";
 //toast: 
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
